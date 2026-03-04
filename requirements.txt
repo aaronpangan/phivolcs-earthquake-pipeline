@@ -1,0 +1,6 @@
+prefect>=3.0.0
+polars
+beautifulsoup4
+httpx
+boto3
+python-dotenv
