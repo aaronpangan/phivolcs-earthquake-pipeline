@@ -1,0 +1,12 @@
+deployments:
+- name: "earthquake-daily-sync"
+  description: "Automated daily ingestion of PHIVOLCS seismic data to S3 and Snowflake."
+  version: "1.0.0"
+  tags: ["prod", "philippines"]
+  schedule:
+    cron: "5 0 * * *"
+    timezone: "Asia/Manila"
+  flow_name: "PHIVOLCS-Earthquake-Pipeline"
+  entrypoint: "src/main.py:earthquake_flow"
+  work_pool:
+    name: "earthquake-pipeline-pool"
