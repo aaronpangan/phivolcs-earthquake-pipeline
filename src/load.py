@@ -35,5 +35,3 @@ def load_to_s3(df: pl.DataFrame):
     s3_client.upload_fileobj(buffer, bucket_name, s3_key)
 
     return f"s3://{bucket_name}/{s3_key}"
-    return f"s3://{bucket_name}/{s3_key}"
-    return f"s3://{bucket_name}/{s3_key}"

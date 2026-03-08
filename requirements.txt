@@ -4,3 +4,4 @@ beautifulsoup4
 httpx
 boto3
 python-dotenv
+pytz

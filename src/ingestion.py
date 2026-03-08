@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import httpx
 import polars as pl
+import pytz
 from bs4 import BeautifulSoup
 
 COLUMN_NAMES = ["DATE_TIME", "LAT", "LONG", "DEPTH", "MAG", "LOCATION"]
@@ -13,11 +14,14 @@ def scrape_earthquake_data() -> pl.DataFrame:
     Fetches earthquake records for yesterday from PHIVOLCS
     and returns a Polars DataFrame.
     """
-    yesterday_str = (datetime.now() - timedelta(days=1)).strftime("%d %B %Y")
+    manila_tz = pytz.timezone("Asia/Manila")
+    now_manila = datetime.now(manila_tz)
+
+    yesterday_str = (now_manila - timedelta(days=1)).strftime("%d %B %Y")
+
     date_pattern = re.compile(rf"{yesterday_str}", re.IGNORECASE)
     url = "https://earthquake.phivolcs.dost.gov.ph/"
 
-   
     with httpx.Client(verify=False, timeout=20) as client:
         response = client.get(url)
         response.raise_for_status()
