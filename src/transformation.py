@@ -7,7 +7,7 @@ def transform_earthquake_data(df: pl.DataFrame) -> pl.DataFrame:
 
     magnitude_class_col = (
         pl.col("MAG")
-        .cast(pl.Float64)
+        .cast(pl.Float64, strict=False)
         .cut(
             breaks=[3.0, 4.0, 5.0, 6.0, 7.0, 8.0],
             labels=["Micro", "Minor", "Light", "Moderate", "Strong", "Major", "Great"],
@@ -15,12 +15,18 @@ def transform_earthquake_data(df: pl.DataFrame) -> pl.DataFrame:
         .alias("MAGNITUDE_CLASS")
     )
 
-    depth_cast_col = pl.col("DEPTH").cast(pl.Int32)
+    clean_depth_col = (
+        pl.col("DEPTH")
+        .str.replace_all(r"[^0-9.]", "") 
+        .cast(pl.Int32, strict=False)  
+        .alias("DEPTH")
+    )
 
     depth_class_col = (
         pl.col("DEPTH")
-        .cast(pl.Int32)
-        .cut(breaks=[70, 300], labels=["Shallow", "Intermedia", "Deep"])
+        .str.replace_all(r"[^0-9.]", "")
+        .cast(pl.Int32, strict=False)
+        .cut(breaks=[70, 300], labels=["Shallow", "Intermediate", "Deep"])
         .alias("DEPTH_CLASS")
     )
 
@@ -36,7 +42,7 @@ def transform_earthquake_data(df: pl.DataFrame) -> pl.DataFrame:
         [
             province_col,
             magnitude_class_col,
-            depth_cast_col,
+            clean_depth_col,
             depth_class_col,
             date_col,
             time_col,
